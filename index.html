@@ -845,16 +845,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();})
   </div>
 </section>
 
-<!-- TESTIMONIALS -->
-<section id="testimonials">
-  <div class="ey rv">What Clients Say</div>
-  <h2 class="st rv">Don't Take Our<br><em>Word for It.</em></h2>
-  <div class="tst-grid">
-    <div class="tc rv"><div class="tc-stars">★★★★★</div><div class="tc-q">"WDG completely changed how our business is perceived. The video content is on another level — our customers genuinely comment on it every week. The best investment we've made."</div><div class="tc-auth"><div class="tc-av">T</div><div><div class="tc-name">Teddington's Farm Shop</div><div class="tc-biz">Retail · Worcestershire</div></div></div></div>
-    <div class="tc rv d1"><div class="tc-stars">★★★★★</div><div class="tc-q">"The brand film they shot is genuinely our best marketing asset. We play it everywhere — on screens in the bar, on the website, in emails. The quality is something we couldn't have achieved locally."</div><div class="tc-auth"><div class="tc-av">L</div><div><div class="tc-name">The Longhorn Bar &amp; Grill</div><div class="tc-biz">Hospitality · Cheltenham</div></div></div></div>
-    <div class="tc rv d2"><div class="tc-stars">★★★★★</div><div class="tc-q">"Having one team manage our website, video and social is a complete game changer. Everything is consistent, everything looks premium, and we're not juggling three different agencies anymore."</div><div class="tc-auth"><div class="tc-av">C</div><div><div class="tc-name">Club One</div><div class="tc-biz">Fitness &amp; Leisure · UK</div></div></div></div>
-  </div>
-</section>
+<!-- Testimonials section removed 17 Nov 2026: the quotes could not be traced to real, named clients (UK DMCC Act 2024 bans fake or unverifiable reviews). Add back only real quotes with permission. -->
 
 <!-- PARALLAX 2 -->
 <div class="px">
@@ -935,7 +926,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();})
         </div>
       </div>
       <div class="ff full"><label>Tell Us About Your Business (Optional)</label><textarea rows="4" placeholder="What do you do? Who are your customers? What are you trying to achieve? The more you tell us, the better your strategy call will be..."></textarea></div>
-      <div class="ff full"><button type="submit" class="form-sub-btn"><span id="sbTxt">Book My Free Strategy Call →</span></button></div>
+      <div class="ff full"><p style="font-size:.8rem;opacity:.7;margin:0 0 10px">This opens your email app with your details ready to send. We only use them to reply to you &ndash; see our <a href="https://www.wdgvideography.com/privacy" style="color:inherit;text-decoration:underline">privacy policy</a>.</p><button type="submit" class="form-sub-btn"><span id="sbTxt">Book My Free Strategy Call →</span></button></div>
     </form>
     <div class="trust-r">
       <span class="tr-it">Free — no obligation</span>
@@ -1067,15 +1058,19 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeLb();})
   function pickCh(el){ document.querySelectorAll('.ch').forEach(b=>b.classList.remove('on')); el.classList.add('on'); }
 
   // FORM SUBMIT
+  // There's no server behind this page, so the form opens the visitor's email app with every
+  // detail filled in, addressed to Will. (Before, it said "Sent!" but only the service and email
+  // reached WhatsApp - everything else was lost.)
   function doSubmit(e){
     e.preventDefault();
-    const sb = document.getElementById('sbTxt');
-    const email = document.getElementById('fEmail').value;
-    const svc = document.getElementById('fSvc').value;
-    sb.textContent = '✓ Sent! We\'ll be in touch within 2 hours.';
-    e.target.querySelector('.form-sub-btn').style.background='#2a6e3f';
-    const msg = encodeURIComponent('Hi WDG! I just submitted an enquiry. Service: '+(svc||'Not specified')+'. Email: '+email);
-    setTimeout(()=>window.open('https://wa.me/447584065559?text='+msg,'_blank'), 1100);
+    const f=e.target, ins=f.querySelectorAll('input'), sels=f.querySelectorAll('select');
+    const val=el=>el?el.value.trim():'';
+    const lines=['Name: '+val(ins[0])+' '+val(ins[1]),'Business: '+val(ins[2]),'Phone: '+val(ins[3]),'Email: '+val(ins[4]),'Interested in: '+(val(sels[0])||'Not specified')];
+    if(sels[1]) lines.push('Contact me by: '+val(sels[1]));
+    const about=val(f.querySelector('textarea')); if(about) lines.push('','About my business:',about);
+    window.location.href='mailto:will@wdgvideography.com?subject='+encodeURIComponent('Strategy call request: '+val(ins[2]))+'&body='+encodeURIComponent(lines.join('\n'));
+    const sb=document.getElementById('sbTxt'); sb.textContent='Opening your email app\u2026';
+    setTimeout(()=>{sb.textContent='Book My Free Strategy Call \u2192';},4000);
   }
 
   // MOBILE NAV
